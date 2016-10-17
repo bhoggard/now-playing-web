@@ -1,15 +1,31 @@
 (ns now-playing-web.core
-    (:require [reagent.core :as reagent]))
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [reagent.core :as reagent]
+            [cljs-http.client :as http]
+            [cljs.core.async :refer [<!]]))
+
+;; -------------------------
+;; Utility functions
 
 (def api-url "http://now-playing-api.herokuapp.com")
+
+(defn update-piece [data source]
+  (go (let [response (<! (http/get (str api-url source) {:with-credentials? false}))]
+    response)))
+
 ;; -------------------------
 ;; Views
 
 (defn piece [name url source]
-  [:div 
-  [:h2 [:a {:href url :target "_blank"} name]]
-  [:p.title "Title"]
-  [:p.composer "Composer"]])
+  (let [component-state (reagent/atom {:title "" :composer ""})]
+    (fn []  ; render function is from here down
+      ; (js/setTimeout #(swap! component-state update-piece source) 5 * 1000)
+      (swap! component-state update-piece source)
+      [:div
+      [:h2 [:a {:href url :target "_blank"} name]]
+      [:p.title (get @component-state :title)]
+      [:p.composer (get @component-state :composer)]
+      ])))
 
 (defn home-page []
   [:div 
