@@ -8,8 +8,10 @@ The skeleton was created with
 
 This uses [now-playing-api](https://github.com/bhoggard/now-playing-api) to get its data.
 
+# Setup
+
 ## License
 
-Copyright © 2016 Barry Hoggard
+Copyright © 2017 Barry Hoggard
 
 MIT License. See [LICENSE](LICENSE).

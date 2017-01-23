@@ -2,16 +2,19 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [reagent.core :as reagent]
             [cljs-http.client :as http]
-            [cljs.core.async :refer [<!]]))
+            [cljs.core.async :refer [<!]]
+            [cljs.pprint :refer [pprint]]))
 
 ;; -------------------------
 ;; Utility functions
 
-(def api-url "http://now-playing-api.herokuapp.com")
+(def api-url "https://now-playing-api.herokuapp.com")
 
 (defn update-piece [data source]
-  (go (let [response (<! (http/get (str api-url source) {:with-credentials? false}))]
-    response)))
+  (()
+    (go (let [response (<! (http/get (str api-url source) {:with-credentials? false}))]
+    ((pprint (:body response)))
+    (:body response)))))
 
 ;; -------------------------
 ;; Views
